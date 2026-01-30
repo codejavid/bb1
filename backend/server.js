@@ -2,15 +2,25 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import connectDB from "./config/db.js";
-import thoughtRoutes from "./routes/thoughtRoutes.js"
+
+// All Routes
+import productRoutes from "./routes/products.js";
 
 const app = express();
 
 // load environment variables
-dotenv.config();
+dotenv.config({
+    path:"backend/config/config.env"
+});
 
 // Middleware
 app.use(cors());
+
+app.use(express.json());
+app.use(express.urlencoded({
+    extended:true,
+    limit:"10mb"
+}));
 
 // Connect to MongoDB
 connectDB().catch(err => {
@@ -19,7 +29,8 @@ connectDB().catch(err => {
 });
 
 // Routes
-app.use("/api/thoughts", thoughtRoutes);
+// app.use("/api/thoughts", thoughtRoutes);
+app.use("/api/v1", productRoutes);
 
 // Test route
 app.get("/", (req, res) => {
